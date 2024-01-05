@@ -1,0 +1,29 @@
+pandas
+numpy
+evidently
+mlflow==2.2.2
+notebook
+xlrd
+scikit-learn==1.2.2
+matplotlib
+datetime
+PyYAML
+tqdm
+ensure==1.0.2
+joblib
+python-box==6.0.2
+ # for evidently report
+cassandra-driver
+#python-dotenv
+ipykernel
+#certifi
+dill
+#
+#fastapi
+#uvicorn
+#gunicorn
+#imblearn
+#PyYAML
+#xgboost
+#python-multipart
+#e .

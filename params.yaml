@@ -1,0 +1,5 @@
+LogisticRegression:
+  C: 100
+  class_weight: balanced
+  max_iter: 100
+  penalty': l2

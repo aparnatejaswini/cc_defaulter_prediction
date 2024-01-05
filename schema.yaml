@@ -1,0 +1,210 @@
+SampleFileName: "CreditCardFraud_20211209_010222.csv"
+LengthOfDateStampInFile: 8
+LengthOfTimeStampInFile: 6
+NoOfColumns: 25
+NoOfColumns_client_data: 23
+ColumnNames:
+    id: integer
+    x1: integer
+    x2: integer
+    x3: integer
+    x4: integer
+    x5: integer
+    x6: integer
+    x7: integer
+    x8: integer
+    x9: integer
+    x10: integer
+    x11: integer
+    x12: integer
+    x13: integer
+    x14: integer
+    x15: integer
+    x16: integer
+    x17: integer
+    x18: integer
+    x19: integer
+    x20: integer
+    x21: integer
+    x22: integer
+    x23: integer
+    y: integer
+    
+    
+
+
+numerical_columns:
+    id: int
+    x1: int
+    x5: int
+    x12: int
+    x13: int
+    x14: int
+    x15: int
+    x16: int
+    x17: int
+    x18: int
+    x19: int
+    x20: int
+    x21: int
+    x22: int
+    x23: int
+
+categorical_columns:
+    x2: category
+    x3: category
+    x4: category
+    x6: category
+    x7: category
+    x8: category
+    x9: category
+    x10: category
+    x11: category
+
+
+target_column: y
+
+domain_values:
+  x2:
+    1: male
+    2: female
+
+  x3:
+    1: graduate school
+    2: university
+    3: high school
+    4: others
+    5: others-Contact data owner for further clarification
+    6: others-Contact data owner for further clarification
+    0: others-Contact data owner for further clarification
+  
+  x4:
+    1: married
+    2: single
+    3: divorced
+    0: others
+
+  x6: 
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+  x7: 
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+  x8:
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+  x9: 
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+  x10: 
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+  x11: 
+    -2: No Consumption
+    -1: pay duly 
+    0: use of revolving credit
+    1: payment delay for one month
+    2: payment delay for two months, … 
+    3: payment delay for three months 
+    4: payment delay for four months
+    5: payment delay for five months 
+    6: payment delay for six months
+    7: payment delay for seven months 
+    8: payment delay for eight months 
+    9: payment delay for nine months and above
+
+drop_columns:
+  id
+  #x2
+  #x3
+  #x4
+  #x5
+
+numerical_features:
+  x1
+  x5
+  x12
+  x13
+  x14
+  x15
+  x16
+  x17
+  x18
+  x19
+  x20
+  x21
+  x22
+  x23
+
+categorical_features:
+  
+  x2
+  x3
+  x4
+  x6
+  x7
+  x8
+  x9
+  x10
+  x11
+
+engineered_features:
+  avg_bill_amt
+  avg_leverage_ratio
+  avg_pay_amt
+  avg_bill_to_pay

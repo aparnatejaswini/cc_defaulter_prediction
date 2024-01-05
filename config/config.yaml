@@ -1,0 +1,53 @@
+artifacts_root: artifacts
+
+
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  source_url: https://archive.ics.uci.edu/ml/machine-learning-databases/00350/default%20of%20credit%20card%20clients.xls
+  downloaded_data_file: artifacts/data_ingestion/CreditCardClients.xls
+  train_test_split_ratio: 0.3
+  train_file: artifacts/data_ingestion/cc_train.csv
+  test_file: artifacts/data_ingestion/cc_test.csv
+
+
+
+data_validation:
+  root_dir: artifacts/data_validation
+  valid_data_dir: artifacts/data_validation/valid_data
+  invalid_data_dir: artifacts/data_validation/invalid_data
+  data_drift_report_dir: artifacts/data_validation/data_drift_report
+  valid_train_file_path: artifacts/data_validation/valid_data/cc_train.csv
+  valid_test_file_path: artifacts/data_validation/valid_data/cc_test.csv
+  invalid_train_file_path: artifacts/data_validation/invalid_data/cc_train.csv
+  invalid_test_file_path: artifacts/data_validation/invalid_data/cc_test.csv
+  drift_report_file_path: artifacts/data_validation/data_drift_report/drift_report.json
+  drift_report_page_path: artifacts/data_validation/data_drift_report/dift_page.html
+  validation_status: artifacts/data_validation/status.txt
+
+
+data_transformation:
+  root_dir: artifacts/data_transformation
+  transformed_train_file: artifacts/data_transformation/cc_train.csv
+  transformed_test_file: artifacts/data_transformation/cc_test.csv
+  selected_features: artifacts/data_transformation/selected_features.txt
+  preprocess_obj: artifacts/data_transformation/preprocess.pkl
+
+
+model_trainer:
+  root_dir: artifacts/model_trainer
+  model_name: artifacts/model_trainer/model.pkl
+  expected_f1_score: 
+
+
+
+#model_evaluation:
+#  root_dir: artifacts/model_evaluation
+#  test_data_path: artifacts/data_transformation/test.csv
+#  model_path: artifacts/model_trainer/model.joblib
+#  metric_file_name: artifacts/model_evaluation/metrics.json
+
+
+
+
+
+
