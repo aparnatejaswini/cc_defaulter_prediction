@@ -13,7 +13,7 @@ A Taiwan-based credit card issuer wants to better predict the likelihood of defa
 6. AWS
 
 
-Steps followed for training:
+### Steps followed for training:
 1. Retrieved data from URL/Cassandra database.
    Used StratifiedSplit to split data into train and test sets.
 2. Univariate analysis.
@@ -31,8 +31,8 @@ Steps followed for training:
 14. Saved model.
 
 
-Steps followed for predicting data:
-Assumption: User uploads a system generated file to predict which of its credit card customers may default for the next month.
+### Steps followed for predicting data:
+**Assumption:** User uploads a system generated file to predict which of its credit card customers may default for the next month.
 1. User uploaded file is saved and goes through data quality, validation and distribution checks.
 2. If uploaded file does not pass through validation checks user will be informed that the file do not pass validation checks. Information will be recorded in logs for further enquiry.
 3. If data validation is successful, preprocess object will be loaded and applied to transform data.
