@@ -4,7 +4,7 @@
 A Taiwan-based credit card issuer wants to better predict the likelihood of default for its customers, as well as identify the key drivers that determine this likelihood. This would inform the issuer’s decisions on who to give a credit card to and what credit limit to provide. It would also help the issuer have a better understanding of their current and potential customers, which would inform their future strategy, including their planning of offering targeted credit products to their customers.
 
 
-### Tech Stack Used
+### Tech Stack/Infrastructure Used
 1. Cassandra
 2. Python
 3. Machine learning algorithms
