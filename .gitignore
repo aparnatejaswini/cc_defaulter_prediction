@@ -156,7 +156,12 @@ cython_debug/
 artifacts/
 logs/
 secure-connect-project-1.zip
-
+mlruns
+data
+uploads
+template.py
+templates
+research
 
 
 # PyCharm

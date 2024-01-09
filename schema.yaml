@@ -2,7 +2,7 @@ SampleFileName: "CreditCardFraud_20211209_010222.csv"
 LengthOfDateStampInFile: 8
 LengthOfTimeStampInFile: 6
 NoOfColumns: 25
-NoOfColumns_client_data: 23
+NoOfColumns_client_data: 24
 ColumnNames:
     id: integer
     x1: integer

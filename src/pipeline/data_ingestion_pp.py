@@ -1,6 +1,6 @@
 from src.config.configuration import ConfigurationManager
 from src.components.data_ingestion import DataIngestion
-from src.components.data_validation import DataValidationPredict
+#from src.components.data_validation import DataValidationPredict
 from src.constants import EnvironmentVariable
 from src.logger import logger
 
@@ -23,7 +23,7 @@ class DataIngestionTrainingPipeline:
         except Exception as e:
             logger.exception(e)
 
-
+'''
 # "Data Validation stage"
 class DataValidationTrainingPipeline:
     def __init__(self):
@@ -37,3 +37,4 @@ class DataValidationTrainingPipeline:
             data_validation.initiate_data_validation()
         except Exception as e:
             logger.exception(e)
+'''

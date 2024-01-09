@@ -17,8 +17,6 @@ class DataValidationConfig:
     valid_data_dir: Path
     invalid_data_dir: Path
     data_drift_report_dir: Path
-    #train_file_path: Path
-    #test_file_path: Path
     valid_train_file_path: Path
     valid_test_file_path: Path
     invalid_train_file_path: Path
@@ -34,6 +32,7 @@ class DataValidationConfig:
 @dataclass(frozen=True)
 class DataTransformationConfig:
     root_dir: Path
+    validated_raw_data: Path
     transformed_train_file: Path
     transformed_test_file: Path
     selected_features: list
@@ -43,6 +42,28 @@ class DataTransformationConfig:
 @dataclass(frozen=True)
 class ModelTrainerConfig:
     root_dir: Path
-    model_name: str
+    model_params: Path
     params: dict
+    target_column: str
+    
+
+@dataclass(frozen=True)
+class ModelEvaluationConfig:
+    root_dir: Path
+    test_data_path: Path
+    #model_path: Path
+    all_params: dict
+    metric_file_name: Path
+    target_column: str
+    mlflow_uri: str
+
+
+@dataclass(frozen=True)
+class ModelDeploymentConfig:
+    root_dir: Path
+    #train_data_path: Path
+    #test_data_path: Path
+    selected_model: Path
+    metrics_file: Path 
+    model_dir: Path
     target_column: str

@@ -9,6 +9,7 @@ from ensure import ensure_annotations
 from box import ConfigBox
 from pathlib import Path
 from typing import Any
+#from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
 
 
 
@@ -139,10 +140,8 @@ def get_size(path: Path) -> str:
 
     Returns:
         str: size in KB
-    """
+     """
     size_in_kb = round(os.path.getsize(path)/1024)
     return f"~ {size_in_kb} KB"
-
-
 
 

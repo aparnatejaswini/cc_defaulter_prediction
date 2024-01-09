@@ -1,10 +1,16 @@
 import pandas as pd
-import os
+from pathlib import Path
 from src.logger import logger
-from src.utils.common import save_object
+from src.utils.common import save_object, save_json
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.metrics import f1_score,precision_score,recall_score
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
+
 from src.entity.config_entity import ModelTrainerConfig, DataTransformationConfig
+import os
 
 
 
@@ -23,19 +29,37 @@ class ModelTrainer:
         train_y = train_data[[self.mt_config.target_column]]
         test_y = test_data[[self.mt_config.target_column]]
         params = self.mt_config.params
+        
+        #list of classification models
+        models = {
+            "LogisticRegression": LogisticRegression(),#(class_weight='balanced'),
+            "SVM": SVC(),#(class_weight='balanced'),
+            "DecisionTree": DecisionTreeClassifier(),#(class_weight='balanced'),
+            "RandomForest": RandomForestClassifier(),#(class_weight='balanced'),
+            "ExtraTree": ExtraTreesClassifier()#(class_weight='balanced'),
+        }
 
-        lr = LogisticRegression(C=params.C, class_weight=params.class_weight, max_iter=params.max_iter, penalty=params.penalty)
-        lr.fit(train_x, train_y.values.ravel())
-        '''
-        train_y_pred = lr.predict(train_x)
-        train_f1_score = f1_score(train_y, train_y_pred)
-        #if train_f1_score<0.65:
-        #    logger.error(f"Current models train data f1 score is {train_f1_score} < 0.65. Model is not a good try for further experiments.")
-        test_y_pred = lr.predict(test_x)
-        test_f1_score = f1_score(test_y, test_y_pred)
-        model_recall_score = recall_score(y_true, y_pred)
-        model_precision_score=precision_score(y_true,y_pred)
-        '''
-        save_object(self.mt_config.model_name, lr)
-        #joblib.dump(lr, os.path.join(self.config.root_dir, self.config.model_name))
+        hyper_params={}
+        for model_name in models:
+            model = models[model_name]
+            logger.info(params)
+            param = params[model_name]
+            skf = StratifiedKFold(n_splits=3, random_state=42, shuffle=True)
+            gs = GridSearchCV(model,param,cv=skf, verbose=1)
+            gs.fit(train_x,train_y.values.ravel())
+            hyper_params[model_name]= gs.best_params_
+            model.set_params(**gs.best_params_)
+            logger.info(f'{model_name} model parameters: {model.set_params(**gs.best_params_)}, {model.get_params()}')
+            model.fit(train_x,train_y.values.ravel())
+            
+            #model.fit(X_train, y_train)  # Train model
 
+            #y_test_pred = model.predict(test_y)
+
+            #test_model_score = f1_score(y_test, y_test_pred)
+
+            model_path = os.path.join(self.mt_config.root_dir,model_name+".pkl")
+            save_object(model_path,model)  
+        save_json(Path(self.mt_config.model_params), hyper_params) 
+
+       

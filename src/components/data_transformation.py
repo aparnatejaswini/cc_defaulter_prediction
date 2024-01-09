@@ -117,7 +117,8 @@ class DataTransformation():
         try:
             train_df = pd.read_csv(self.dv_config.valid_train_file_path)
             test_df = pd.read_csv(self.dv_config.valid_test_file_path)
-
+            validated_raw_data=pd.concat([train_df, test_df]).drop(columns='y')
+            validated_raw_data.to_csv(self.dt_config.validated_raw_data, index=False)
             #split feature and target columns
             drop_columns = self.dv_config.all_schema['drop_columns']
             target_column=self.dv_config.all_schema['target_column']
@@ -142,14 +143,14 @@ class DataTransformation():
 
             #Feature Selection
             clf = LogisticRegression(class_weight='balanced', max_iter=400)
-            cv = StratifiedKFold(5)
+            cv = StratifiedKFold(3, shuffle=True, random_state=42)
             rfecv_lr = RFECV(
                 estimator=clf,
-                step=1,
+                step=0.05,
                 cv=cv,
                 scoring='f1',
                 min_features_to_select=1,
-                n_jobs=2,
+                n_jobs=2, verbose=1
             )
             rfecv_lr.fit(X_train_transformed_df, target_train_df)
             logger.info(f"Optimal number of features: {rfecv_lr.n_features_}")
@@ -174,8 +175,8 @@ class DataTransformation():
             x_test_fs1_df = x_test_transformed_df[feature_importance['features']]
             train_pd = pd.concat([X_train_fs1_df, target_train_df], axis=1)
             test_pd = pd.concat([x_test_fs1_df, target_test_df], axis=1)
-            train_pd.to_csv(self.dt_config.transformed_train_file)
-            test_pd.to_csv(self.dt_config.transformed_test_file)
+            train_pd.to_csv(self.dt_config.transformed_train_file, index=False, header=True)
+            test_pd.to_csv(self.dt_config.transformed_test_file, index=False, header=True)
             
             logger.info(f"file path type: {type(self.dt_config.preprocess_obj)}")
             save_object(Path(self.dt_config.preprocess_obj), preprocessed_obj)

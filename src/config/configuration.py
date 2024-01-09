@@ -3,8 +3,9 @@ from src.utils.common import read_yaml, create_directories
 from src.entity.config_entity import DataIngestionConfig, \
                                      DataValidationConfig, \
                                             DataTransformationConfig, \
-                                            ModelTrainerConfig
-#                                            ModelEvaluationConfig)
+                                            ModelTrainerConfig, \
+                                            ModelEvaluationConfig, \
+                                            ModelDeploymentConfig
 
 class ConfigurationManager:
     def __init__(
@@ -70,6 +71,7 @@ class ConfigurationManager:
 
         data_transformation_config = DataTransformationConfig(
             root_dir=config.root_dir,
+            validated_raw_data=config.validated_raw_data,
             transformed_train_file= config.transformed_train_file,
             transformed_test_file= config.transformed_test_file,
             selected_features=config.selected_features,
@@ -82,14 +84,14 @@ class ConfigurationManager:
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
         config = self.config.model_trainer
-        params = self.params.LogisticRegression
+        params = self.params
         target_column = self.schema.target_column
 
         create_directories([config.root_dir])
 
         model_trainer_config = ModelTrainerConfig(
             root_dir=config.root_dir,
-            model_name = config.model_name,
+            model_params = config.model_params,
             params = params,
             target_column = target_column
         )
@@ -97,24 +99,42 @@ class ConfigurationManager:
         return model_trainer_config
     
 
-'''
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
         config = self.config.model_evaluation
-        params = self.params.ElasticNet
-        schema =  self.schema.TARGET_COLUMN
+        params = self.params
+        target_column = self.schema.target_column
 
         create_directories([config.root_dir])
 
         model_evaluation_config = ModelEvaluationConfig(
             root_dir=config.root_dir,
             test_data_path=config.test_data_path,
-            model_path = config.model_path,
+            #model_path = config.model_path,
             all_params=params,
             metric_file_name = config.metric_file_name,
-            target_column = schema.name,
-            mlflow_uri="https://dagshub.com/entbappy/End-to-end-Machine-Learning-Project-with-MLflow.mlflow",
+            target_column = target_column,
+            mlflow_uri="https://dagshub.com/aparnatejaswini/cc_defaulter_prediction.mlflow"
+,
            
         )
 
         return model_evaluation_config
-    '''
+    
+
+    def get_model_deployment_config(self) -> ModelDeploymentConfig:
+        config = self.config.model_deployment
+        target_column = self.schema.target_column
+
+        create_directories([config.root_dir])
+
+        model_trainer_config = ModelDeploymentConfig(
+            root_dir=config.root_dir,
+            #train_data_path= config.train_data_path,
+            #test_data_path=config.test_data_path,
+            target_column = target_column, 
+            selected_model = config.selected_model,
+            metrics_file = config.metrics_file,
+            model_dir = config.model_dir
+        )
+
+        return model_trainer_config

@@ -18,12 +18,14 @@ cassandra-driver
 ipykernel
 #certifi
 dill
+dagshub
 #
-#fastapi
-#uvicorn
-#gunicorn
+fastapi
+uvicorn
+gunicorn
+python-multipart
 #imblearn
 #PyYAML
 #xgboost
-#python-multipart
+#
 #e .

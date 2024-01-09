@@ -1,63 +1,74 @@
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import Response, FileResponse
+from uvicorn import run as app_run
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
+from src.pipeline.prediction_pipeline import Predict_pipeline
+from src.pipeline.training_pipeline import Train_Pipeline
 from src.logger import logger
-from src.pipeline.data_ingestion_pp import DataIngestionTrainingPipeline
-from src.pipeline.data_validation_pp import DataValidationTrainingPipeline
-from src.pipeline.data_transformation_pp import DataTransformationPipeline
-from src.pipeline.model_trainer_pp import ModelTrainerTrainingPipeline
-
-STAGE_NAME = "Data Ingestion stage"
-try:
-   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-   data_ingestion = DataIngestionTrainingPipeline()
-   data_ingestion.main()
-   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        logger.exception(e)
-        raise e
-
-STAGE_NAME = "Data Validation stage"
-try:
-   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-   data_validation = DataValidationTrainingPipeline()
-   data_validation.main()
-   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        logger.exception(e)
-        raise e
-
-STAGE_NAME = "Data Transformation stage"
-try:
-   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-   data_transformation = DataTransformationPipeline()
-   data_transformation.main()
-   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        logger.exception(e)
-        raise e
+import os, shutil
 
 
-STAGE_NAME = "Model Trainer stage"
-try:
-   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-   train_model = ModelTrainerTrainingPipeline()
-   train_model.main()
-   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        logger.exception(e)
-        raise e
+app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+UPLOAD_DIR = os.path.join(os.getcwd(), 'uploads')
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+@app.get('/')
+def index():
+    return RedirectResponse('/docs')
 '''
-
-STAGE_NAME = "Model evaluation stage"
-try:
-   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
-   data_ingestion = ModelEvaluationTrainingPipeline()
-   data_ingestion.main()
-   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-except Exception as e:
-        logger.exception(e)
-        raise e
-
-
+@app.get('/train')
+def train_route():
+    try:
+        train_pipeline = Train_Pipeline()
+        if train_pipeline.is_pipeline_running:
+            return Response("Training pipeline is already running.")
+        train_pipeline.run_pipeline()
+        return Response("Training Successful.")
+    except Exception as e:
+        return Response(f"Error Occured. {e}")
 '''
+@app.post("/upload_file")
+def upload_file(file:UploadFile = File()):
+    try:
+        predict_pipeline = Predict_pipeline()
+        file_path = os.path.join(os.getcwd(), 'data', f'{file.filename}')
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'wb') as buffer:          
+            shutil.copyfileobj(file.file, buffer)
+        response = predict_pipeline.predict_pipeline(file_path, UPLOAD_DIR)
+        if os.path.exists(response):
+            return FileResponse(path = response, media_type='application/octet-stream', filename=os.path.basename(response))
+        else: 
+            return Response(response)
+        
+    except Exception as e:
+        return Response(f"Error Occured. {e}")
 
 
+#app_run(app, host="127.0.0.1", port=8000)
+
+
+'''    
+def main():
+    try:
+        training_pipeline = Train_Pipeline()
+        training_pipeline.run_pipeline()
+    except Exception as e:
+        logger.exception(e)
+
+if __name__ == "__main__":
+    app_run(app, host="127.0.0.1", port=8000)
+'''

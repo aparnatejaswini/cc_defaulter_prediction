@@ -1,21 +1,19 @@
 from src.logger import logger
 from src.utils.common import read_yaml
-from src.entity.config_entity import DataIngestionConfig, DataValidationConfig
+from src.entity.config_entity import DataValidationConfig, DataTransformationConfig
 from evidently.report import Report
 from evidently.metrics import DatasetDriftMetric, DataDriftTable
 from pathlib import Path
-
-import json
+import shutil
 import pandas as pd
 import sys
 import os
-import shutil
 import re
 
-class DataValidation():
+class DataValidationPredict():
     """
-    This class shall be used to perform all the validation checks done on training data.
-    
+    This class shall be used to perform all the validation checks done on user data.
+
     - checks if source file path exists
     - validates file name
     - validates Number of columns
@@ -30,10 +28,10 @@ class DataValidation():
     written by: Aparna T Parkala
     Version:1.0
     """
-    def __init__(self,di_config:DataIngestionConfig, dv_config: DataValidationConfig):
-        self.di_config = di_config
-        self.dv_config = dv_config
 
+    def __init__(self, dv_config: DataValidationConfig, dt_config:DataTransformationConfig ):
+        self.dv_config = dv_config
+        self.dt_config=dt_config
 
 
     def check_if_file_exists(self, file_path:Path)->bool:
@@ -55,7 +53,7 @@ class DataValidation():
             return file_exists
         except Exception as e:
             logger.exception(e)
-    '''
+    
     def validate_file_name(self, file_path) ->bool:
         """
         returns a boolean value.
@@ -64,7 +62,7 @@ class DataValidation():
         """
         try:
             file_name_validated = False
-            pattern = re.compile(r"^CreditCard[A-Za-z]{5}\_\d{8}\_\d{6}\.csv")
+            pattern = re.compile(r"^creditCard[A-Za-z]{5}\_\d{8}\_\d{6}\.csv")
             if pattern.match(os.path.basename(file_path)):
                 logger.info("File Name Validated Successfully.")
                 file_name_validated = True
@@ -72,9 +70,9 @@ class DataValidation():
                 logger.info("File Name format is not validated. Moving file to invalid data Folder")
             return file_name_validated
         except Exception as e:
-            raise Custom_Defaulter_Exception(e,sys)
+            logger.exception(e)
 
-    '''
+
 
     def validate_dataset_schema(self,file_path)->bool:
         """
@@ -94,12 +92,12 @@ class DataValidation():
             schema_config = self.dv_config.all_schema
 
             #Validate fie name
-            #file_name_validated = self.validate_file_name(file_path=file_path)
+            file_name_validated = self.validate_file_name(file_path=file_path)
 
             #Validate No.of Columns
             num_cols_validated = False
             df = pd.read_csv(file_path)
-            if df.shape[1] == schema_config['NoOfColumns']:
+            if df.shape[1] == schema_config['NoOfColumns_client_data']:
                 num_cols_validated=True
                 logger.info("Number of columns validated.")
             else:
@@ -108,7 +106,7 @@ class DataValidation():
                                     columns in file {df.shape[1]}")
 
             #Validate column names
-            column_names = set(schema_config['ColumnNames'].keys())#-set(schema_config['target_column'])
+            column_names = set(schema_config['ColumnNames'].keys())-set(schema_config['target_column'])
             col_names_validated = False
             if set(df.columns) == column_names:
                 col_names_validated = True
@@ -150,21 +148,23 @@ class DataValidation():
             else:
                 null_col_validated = True
 
-            #logger.info(f"{file_name_validated} and {num_cols_validated} and {col_names_validated} \
-             #                       and {domain_val_validated} and {null_col_validated}")
-            #validation_status = file_name_validated and num_cols_validated and col_names_validated \
-            #                        and domain_val_validated and null_col_validated
-            logger.info(f"{num_cols_validated} and {col_names_validated} \
-                                    and {domain_val_validated} and {null_col_validated}")
-            validation_status = num_cols_validated and col_names_validated \
+            logger.info(f"{file_name_validated} and {num_cols_validated} and {col_names_validated} \
+                                   and {domain_val_validated} and {null_col_validated}")
+            validation_status = file_name_validated and num_cols_validated and col_names_validated \
                                     and domain_val_validated and null_col_validated
-
+            #logger.info(f"{num_cols_validated} and {col_names_validated} \
+            #                        and {domain_val_validated} and {null_col_validated}")
+            #validation_status = num_cols_validated and col_names_validated \
+            #                        and domain_val_validated and null_col_validated
+            logger.info(validation_status)
             return validation_status
 
         except Exception as e:
-            raise logger.exception(e)
+            logger.exception(e)
         
-    def get_and_save_data_drift_report(self,train_file_path, test_file_path):
+
+
+    def get_and_save_data_drift_report(self,train_file_path, user_file_path):
         """
         Generate and save data drift report 
         returns report
@@ -175,18 +175,8 @@ class DataValidation():
                 DataDriftTable(),    
             ])
             prev_data = pd.read_csv(train_file_path)
-            new_data = pd.read_csv(test_file_path)
-            data_drift_dataset_report.run(reference_data=prev_data, current_data=new_data)
-            #report_file_path = os.path.join(self.upload_dir, DATA_VALIDATION_DRIFT_REPORT_FILE_NAME)
-            #report_page_file_path = os.path.join(self.upload_dir, DATA_VALIDATION_DRIFT_REPORT_PAGE_FILE_NAME)
-            #report_dir = os.path.dirname(report_file_path)
-            #os.makedirs(self.config.drift_report_file_path, exist_ok=True)
-            #logger.info(os.path.exists(self.config.data_drift_report_dir))
-            #logger.info(f"{report_file_path}, {report_page_file_path}")
-            #if not os.path.exists(self.config.drift_report_file_path)
-            #logger.info(type(self.dv_config.drift_report_file_path))
-            #logger.info(type(self.dv_config.drift_report_page_path))   
-            #logger.info(os.access(self.dv_config.drift_report_file_path, os.W_OK))         
+            new_data = pd.read_csv(user_file_path)
+            data_drift_dataset_report.run(reference_data=prev_data, current_data=new_data)      
             data_drift_dataset_report.save_json(self.dv_config.drift_report_file_path)
             data_drift_dataset_report.save_html(self.dv_config.drift_report_page_path)
             logger.info("saving dataset drift report")
@@ -194,35 +184,29 @@ class DataValidation():
             logger.exception(e)
 
     
-    def is_data_drift_found(self,train_file_path, test_file_path)->bool:
+    def is_data_drift_found(self,train_file_path, user_file_path)->bool:
         """
         checks if data drift exists
         returns boolean value
         """
         try:
             logger.info("Checking for DataDrift..")
-            self.get_and_save_data_drift_report(train_file_path, test_file_path)
-            #self.save_data_drift_report_page(file_path)
-            #logger.info(type(Path(self.dv_config.drift_report_file_path)))
+            self.get_and_save_data_drift_report(train_file_path, user_file_path)
             report_status = read_yaml(Path(self.dv_config.drift_report_file_path))
             logger.info(report_status.metrics[0].result.dataset_drift)
             data_drift = report_status.metrics[0].result.dataset_drift
             return data_drift
-            #report_path = os.path.join(self.upload_dir, DATA_VALIDATION_DRIFT_REPORT_FILE_NAME)
-            #with open(report_path) as jobj:
-            #    jdict = json.load(jobj)['metrics']['DatasetDriftMetric']['dataset_drift']
-            #return jdict['metrics']['DatasetDriftMetric']['dataset_drift']
         except Exception as e:
             logger.exception(e)
 
-    def initiate_data_validation(self,):        
+
+    def initiate_data_validation(self,user_file_path):        
         try:
-            train_file_path = self.di_config.train_file
-            test_file_path = self.di_config.test_file
             validation_status=True
-            if (self.check_if_file_exists(train_file_path) & self.check_if_file_exists(test_file_path)):
-                if (self.validate_dataset_schema(file_path=train_file_path) & self.validate_dataset_schema(file_path=test_file_path)):      
-                    if self.is_data_drift_found(train_file_path, test_file_path):
+            train_file_path=self.dt_config.validated_raw_data
+            if (self.check_if_file_exists(user_file_path)):
+                if (self.validate_dataset_schema(file_path=user_file_path)):      
+                    if self.is_data_drift_found(train_file_path, user_file_path):
                         logger.info("Data Validation unsuccessful. Data Drift Found.. Exiting program....")
                         sys.exit("Data Validation unsuccessful.. Data Drift detected. Exiting... See logs for more information.")
                     else:
@@ -238,18 +222,15 @@ class DataValidation():
                     logger.info(msg)
                     validation_status=False
                     sys.exit("Data Validation unsuccessful. File not found. See logs for more information.")
-
-            if validation_status:
-                logger.info(f"Data validation successful. Moving files to {self.dv_config.valid_data_dir}")
-                shutil.move(train_file_path, self.dv_config.valid_train_file_path)
-                shutil.move(test_file_path, self.dv_config.valid_test_file_path)
-            else:
-                logger.info(f"Data validation unsuccessful. Moving files to {self.dv_config.invalid_data_dir}")
-                shutil.move(test_file_path, self.dv_config.invalid_test_file_path)
-                shutil.move(train_file_path, self.dv_config.invalid_train_file_path)
+            #if validation_status:
+                #logger.info(f"Data validation successful. Moving files to {self.dv_config.valid_data_dir}")
+                #shutil.move(user_file_path, self.dv_config.valid_train_file_path)
+            #else:
+                #logger.info(f"Data validation unsuccessful. Moving files to {self.dv_config.invalid_data_dir}")
+                #shutil.move(user_file_path, self.dv_config.invalid_train_file_path)
+            logger.info(validation_status)
             with open(self.dv_config.validation_status, 'w') as f:
-                f.write(f"{validation_status}")
-            #self.dv_config.validation_status = validation_status
+                f.write(str(validation_status))
             
         except Exception as e:
             logger.exception(e)

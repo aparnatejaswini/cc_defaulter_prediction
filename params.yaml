@@ -1,5 +1,30 @@
 LogisticRegression:
-  C: 100
-  class_weight: balanced
-  max_iter: 100
-  penalty': l2
+  penalty: [l2]
+  C: [0.01, 0.1, 1, 10]
+  class_weight: [balanced]
+  max_iter: [400]
+  solver: [liblinear, lbfgs]
+
+
+SVM:
+  C: [0.01, 0.1, 1, 10]
+  kernel: [linear, poly, sigmoid]
+  class_weight: [balanced]
+
+DecisionTree:
+  criterion: [gini, entropy, log_loss]
+  max_depth: [2, 5, 8, 10]
+  class_weight: [balanced]
+
+
+RandomForest:
+  class_weight: [balanced]
+  criterion: [gini, entropy, log_loss]
+  max_depth: [2, 5, 8, 10]
+  n_estimators: [100, 150, 200]
+
+ExtraTree:
+  class_weight: [balanced]
+  criterion: [gini, entropy, log_loss]
+  max_depth: [2, 5, 8, 10]
+  n_estimators: [100, 150, 200]
