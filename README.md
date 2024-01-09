@@ -31,7 +31,7 @@ A Taiwan-based credit card issuer wants to better predict the likelihood of defa
 14. Saved model.
 
 
-### Steps followed for predicting data:
+### Steps followed for prediction:
 **Assumption:** User uploads a system-generated file to predict which of its credit card customers may default for the next month.
 1. User uploaded file is saved and goes through data quality, validation, and distribution checks.
 2. If the uploaded file does not pass through validation checks user will be informed that the file does not pass validation checks. Information will be recorded in logs for further inquiry.
