@@ -58,7 +58,6 @@ def upload_file(file:UploadFile = File()):
         return Response(f"Error Occured. {e}")
 
 
-#app_run(app, host="127.0.0.1", port=8000)
 
 
 '''    
@@ -68,7 +67,6 @@ def main():
         training_pipeline.run_pipeline()
     except Exception as e:
         logger.exception(e)
-
-if __name__ == "__main__":
-    app_run(app, host="127.0.0.1", port=8000)
 '''
+if __name__ == "__main__":
+    app_run(app, host="0.0.0.0", port=8080)
