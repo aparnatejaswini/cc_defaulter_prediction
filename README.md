@@ -14,21 +14,21 @@ A Taiwan-based credit card issuer wants to better predict the likelihood of defa
 
 
 ### Steps followed for training:
-1. **Data ingested** from URL/Cassandra database.
+1. **Data ingested** from URL/Cassandra database. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/data_ingestion.py)
 2. **Split** the data into train and test sets.
-3. **Explored data** for missing values, duplicates and outliers.
+3. **Explored data** for missing values, duplicates and outliers. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/notebook/ccdp-EDA.ipynb)
 4. Univariate analysis.
 5. Bivariate analysis.
-6. Data quality and validation checks and data distribution checks using evidentlyAI.
-7. **Feature engineering**.
+6. Data quality and validation checks and data distribution checks using evidentlyAI. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/data_validation.py)
+7. **Feature engineering**. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/data_transformation.py)
 8. **Standardization** of features.
 9. **Feature selection** with Recursive Feature Elimination using CrossValidation.
 10. **Selected models** appropriate for classification problems.
-11. **Trained models** on training data.
+11. **Trained models** on training data. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/train_model.py)
 12. Tuned **hyper parameters** using GridSearchCV.
-13. Used **mlflow** for **experiment tracking**.
-14. **Evaluated best model** based on F1-Score.
-15. Combined train and test datasets and trained chosen model on whole data.
+13. Used **mlflow** for **experiment tracking**. [link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/evluate_model.py)
+14. **Evaluated best model** based on F1-Score. 
+15. Combined train and test datasets and trained chosen model on whole data.[link](https://github.com/aparnatejaswini/cc_defaulter_prediction/blob/main/src/components/deploy_model.py)
 16. Saved model.
 17. **Deployed model** on AWS EC2 instance.
 
