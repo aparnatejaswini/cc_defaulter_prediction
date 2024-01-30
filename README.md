@@ -14,27 +14,29 @@ A Taiwan-based credit card issuer wants to better predict the likelihood of defa
 
 
 ### Steps followed for training:
-1. Retrieved data from URL/Cassandra database.
-   Used StratifiedSplit to split data into train and test sets.
-2. Univariate analysis.
-3. Bivariate analysis.
-4. Data quality and validation checks and data distribution checks using evidentlyAI.
-5. Feature engineering.
-6. Feature selection with Recursive Feature Elimination using CrossValidation.
-7. Standardization of features.
-8. Built models using GridsearchCV.
-9. Retrieved best params from gridsearchcv and set the params for the respective model.
-10. Trained models on training data, and tested the models on test data.
-11. Used mlflow for experiment tracking.
-12. Choose the best model based on F1-Score.
-13. Combined train and test datasets and trained chosen model on whole data.
-14. Saved model.
+1. **Data ingested** from URL/Cassandra database.
+2. **Split** the data into train and test sets.
+3. **Explored data** to for missing values, duplicates and outliers.
+4. Univariate analysis.
+5. Bivariate analysis.
+6. Data quality and validation checks and data distribution checks using evidentlyAI.
+7. **Feature engineering**.
+8. **Standardization** of features.
+9. **Feature selection** with Recursive Feature Elimination using CrossValidation.
+10. **Selected models** appropriate for classification problems.
+11. **Trained models** on training data.
+12. Tuned **hyper parameters** using GridSearchCV.
+13. Used **mlflow** for **experiment tracking**.
+14. **Evaluated best model** based on F1-Score.
+15. Combined train and test datasets and trained chosen model on whole data.
+16. Saved model.
+17. **Deployed model** on AWS EC2 instance.
 
 
 ### Steps followed for prediction:
-**Assumption:** User uploads a system-generated file to predict which of its credit card customers may default for the next month.
+**Input:** User uploads a file to predict which of its credit card customers may default for the next month.
 1. User uploaded file is saved and goes through data quality, validation, and distribution checks.
-2. If the uploaded file does not pass through validation checks user will be informed that the file does not pass validation checks. Information will be recorded in logs for further inquiry.
+2. If the uploaded file does not pass through validation checks user will be informed that the file did not pass validation checks. Information will be recorded in logs for further inquiry.
 3. If data validation is successful, a preprocess object will be loaded and applied to transform data.
 4. The saved model will be loaded and used to predict whether the customer will default or not.
 5. A file with uploaded data and predictions will be available for the user to download.
