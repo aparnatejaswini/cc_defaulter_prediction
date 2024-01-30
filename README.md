@@ -16,7 +16,7 @@ A Taiwan-based credit card issuer wants to better predict the likelihood of defa
 ### Steps followed for training:
 1. **Data ingested** from URL/Cassandra database.
 2. **Split** the data into train and test sets.
-3. **Explored data** to for missing values, duplicates and outliers.
+3. **Explored data** for missing values, duplicates and outliers.
 4. Univariate analysis.
 5. Bivariate analysis.
 6. Data quality and validation checks and data distribution checks using evidentlyAI.
